@@ -9,10 +9,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpClient\HttpClient;
 use App\Entity\User;
 use App\Entity\Admin;
 use App\Entity\Manager;
 use App\Entity\Operator;
+use App\Mailer\Mailer;
 
 class AuthController extends AbstractController
 {
@@ -28,7 +30,7 @@ class AuthController extends AbstractController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/login/", name="login", methods="POST")
+     * @Route("/login", name="login", methods="POST")
      */
     public function login(Request $request){
         $data = @json_decode($request->getContent(),true);
@@ -51,7 +53,7 @@ class AuthController extends AbstractController
                     }
                     if($obj != null){
                         $pass = true;
-                        if($user->getRol() == "Manager")
+                        if($user->getRol() == "Manager" || $user->getRol() == "Operator")
                             if(!$obj->getActive()) $pass = false;
                         if($pass){
                             $token = $this->jwtEncoder->encode([
@@ -115,7 +117,7 @@ class AuthController extends AbstractController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/logup/", name="logup", methods="POST")
+     * @Route("/logup", name="logup", methods="POST")
      */
     public function logup(Request $request){
         $data = @json_decode($request->getContent(),true);
@@ -196,6 +198,48 @@ class AuthController extends AbstractController
                 'message'=>'Error',
                 'error'=>$th->getMessage(),
                 'results'=>null
+            );
+        }
+        return new JsonResponse($response, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/restore-password", name="restorePassword", methods="POST")
+     */
+    public function restorePassword(Request $request, Mailer $mailer)
+    {
+        $data = @json_decode($request->getContent(),true);
+        if(is_array($data) && array_key_exists("email",$data)){
+            $setting = 'restore_password';
+            $token = $this->jwtEncoder->encode([
+                'email' => $data['email'],
+                'exp' => time() + 3600,
+                'verified'=>true,
+            ]);
+            $confirm = "https://workappointments.vercel.app/login/$token";
+            try {
+                $response = $mailer->sendRestorePasswordEmail($setting, 'josejmvasquez@gmail.com', $confirm);
+                $response = array(
+                    "code" => 1,
+                    "message" => "success",
+                    "error" => null,
+                    "results" => $response
+                );
+            } catch (\Throwable $th) {
+                $response = array(
+                    "code" => 0,
+                    "message" => "error",
+                    "error" => $th->getMessage(),
+                    "results" => null
+                );
+            }
+        } else{
+            $response = array(
+                "code" => 0,
+                "message" => "error",
+                "error" => "Ingrese un email",
+                "results" => null
             );
         }
         return new JsonResponse($response, Response::HTTP_CREATED);

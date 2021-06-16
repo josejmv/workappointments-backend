@@ -26,7 +26,7 @@ class ServiceController extends AbstractController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/service/", name="addService", methods="POST")
+     * @Route("/service", name="addService", methods="POST")
      */
     public function addService(Request $request){
         $data = @json_decode($request->getContent(),true);
@@ -67,34 +67,41 @@ class ServiceController extends AbstractController
                                 $h *= $service->getDays();
                                 $totalHours = new \DateTime(date("d-m-Y H:i",mktime($h, $i)));
                                 $service->setTotalHours($totalHours);
-                                $service->setFilter($filter);
-                                $service->setActive(true);
-                                $quantityServices = count($this->getDoctrine()->getRepository(Service::class)->findAll());
-                                $token = $this->jwtEncoder->encode([
-                                    'id' => $quantityServices + 1,
-                                    'exp' => time() + 3600,
-                                    'verify' => true
-                                ]);
-                                $service->setNewCreated($token);
-                                $entity->addService($service);
-                                try {
-                                    $newService = $this->getDoctrine()->getManager();
-                                    $newService->persist($entity);
-                                    $newService->flush();
-                                    $response = array(
-                                        'code'=>1,
-                                        'message'=>'Success',
-                                        'error'=>null,
-                                        'results'=> $token
-                                    );
-                                } catch (\Throwable $th) {
-                                    $response = array(
-                                        'code'=>0,
-                                        'message'=>'Error',
-                                        'error'=>$th->getMessage(),
-                                        'results'=>null
-                                    );
-                                }
+                                if(is_array($data["filter"])){
+                                    $service->setFilter($filter);
+                                    $service->setActive(true);
+                                    $quantityServices = count($this->getDoctrine()->getRepository(Service::class)->findAll());
+                                    $token = $this->jwtEncoder->encode([
+                                        'id' => $quantityServices + 1,
+                                        'exp' => time() + 3600,
+                                        'verify' => true
+                                    ]);
+                                    $service->setNewCreated($token);
+                                    $entity->addService($service);
+                                    try {
+                                        $newService = $this->getDoctrine()->getManager();
+                                        $newService->persist($entity);
+                                        $newService->flush();
+                                        $response = array(
+                                            'code'=>1,
+                                            'message'=>'Success',
+                                            'error'=>null,
+                                            'results'=> $token
+                                        );
+                                    } catch (\Throwable $th) {
+                                        $response = array(
+                                            'code'=>0,
+                                            'message'=>'Error',
+                                            'error'=>$th->getMessage(),
+                                            'results'=>null
+                                        );
+                                    }
+                                } else $response = array(
+                                    'code'=>0,
+                                    'message'=>'Error',
+                                    'error'=> "Debe ingresar un filtro",
+                                    'results'=>null
+                                );
                             } else $response = array(
                                 'code'=>0,
                                 'message'=>'Error',
@@ -122,7 +129,7 @@ class ServiceController extends AbstractController
             } else $response = array(
                         'code'=>-1,
                         'message'=>'Error',
-                        'error'=>"No access",
+                        'error'=>"Cuenta inactiva",
                         'results'=>null
                     );
         } catch (\Throwable $th) {
@@ -137,10 +144,66 @@ class ServiceController extends AbstractController
     }
 
     /**
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/service/{id}", name="showSingleService", methods="GET")
+     */
+    public function showSingleService(Request $request, $id) {
+        try{
+            $service = $this->getDoctrine()->getRepository(Service::class)->find($id);
+            if($service instanceof Service && $service->getActive()){
+                $formatedService = @json_decode($this->get('serializer')->serialize($service,'json',[
+                    'circular_reference_handler' => function ($object) {
+                        return $object->getId();
+                    }
+                ]),true);
+                $formatedService['serviceResume'] = [];
+                unset($formatedService['operators']);
+                unset($formatedService['newCreated']);
+                $formatedService['available'] = $service->getMaxEmployeeQuantity() - count($service->getOperators());
+                $formatedService['filter'] = json_decode($formatedService['filter']);
+                $formatedService['startHour'] = $service->getStartHour()->format('H:i');
+                $formatedService['endHour'] = $service->getEndHour()->format('H:i');
+                $formatedService['totalHours'] = $service->getTotalHours()->format('d H:i');
+                $formatedService['date'] = $service->getStartHour()->format('d-m-Y');
+                $formatedService['minHoursPerEmployees'] = $service->getMinHoursPerEmployees()->format('H:i');
+                foreach ($service->getOperators() as $operator) {
+                    $formatedService['operators']['id'] = $operator->getId();
+                    $formatedService['operators']['email'] = $operator->getEmail();
+                }
+                $code = 1;
+                $message = "success";
+                $error = null;
+                $result = $formatedService;
+            } else{
+                $code = 0;
+                $message = "Error";
+                $error = "Servicio no encontrado";
+                $result = null;
+            }
+            $response = array(
+                "code" => $code,
+                "message" => $message,
+                "error" => $error,
+                "results" => $result
+            );
+        } catch(\Throwable $th){
+            $response = array(
+                'code'=>0,
+                'message'=>'Ha ocurrido un error',
+                'error'=>$th->getMessage(),
+                'results'=>null
+            );
+        }
+        return new JsonResponse($response, Response::HTTP_CREATED);
+    }
+
+    /**
      * @param $page
      * @param $active
      * @return JsonResponse
-     * @Route("/paginator/services/", name="servicesPaginator", methods="GET")
+     * @Route("/paginator/services", name="servicesPaginator", methods="GET")
      */
     public function servicesPaginator(){
         try{
@@ -168,7 +231,7 @@ class ServiceController extends AbstractController
      * @param $page
      * @param $active
      * @return JsonResponse
-     * @Route("/services/{page}&{active}/", name="showServices", methods="GET")
+     * @Route("/services/{page}&{active}", name="showServices", methods="GET")
      */
     public function showServices($page, $active){
         try{
@@ -242,63 +305,7 @@ class ServiceController extends AbstractController
      * @param $id
      * @param Request $request
      * @return JsonResponse
-     * @Route("/service/{id}/", name="showSingleService", methods="GET")
-     */
-    public function showSingleService(Request $request, $id){
-        try{
-            $service = $this->getDoctrine()->getRepository(Service::class)->find($id);
-            if($service instanceof Service && $service->getActive()){
-                $formatedService = @json_decode($this->get('serializer')->serialize($service,'json',[
-                    'circular_reference_handler' => function ($object) {
-                        return $object->getId();
-                    }
-                ]),true);
-                $formatedService['serviceResume'] = [];
-                unset($formatedService['operators']);
-                unset($formatedService['newCreated']);
-                $formatedService['available'] = $service->getMaxEmployeeQuantity() - count($service->getOperators());
-                $formatedService['filter'] = json_decode($formatedService['filter']);
-                $formatedService['startHour'] = $service->getStartHour()->format('H:i');
-                $formatedService['endHour'] = $service->getEndHour()->format('H:i');
-                $formatedService['totalHours'] = $service->getTotalHours()->format('d H:i');
-                $formatedService['date'] = $service->getStartHour()->format('d-m-Y');
-                $formatedService['minHoursPerEmployees'] = $service->getMinHoursPerEmployees()->format('H:i');
-                foreach ($service->getOperators() as $operator) {
-                    $formatedService['operators']['id'] = $operator->getId();
-                    $formatedService['operators']['email'] = $operator->getEmail();
-                }
-                $code = 1;
-                $message = "success";
-                $error = null;
-                $result = $formatedService;
-            } else{
-                $code = 0;
-                $message = "Error";
-                $error = "Servicio no encontrado";
-                $result = null;
-            }
-            $response = array(
-                "code" => $code,
-                "message" => $message,
-                "error" => $error,
-                "results" => $result
-            );
-        } catch(\Throwable $th){
-            $response = array(
-                'code'=>0,
-                'message'=>'Ha ocurrido un error',
-                'error'=>$th->getMessage(),
-                'results'=>null
-            );
-        }
-        return new JsonResponse($response, Response::HTTP_CREATED);
-    }
-
-    /**
-     * @param $id
-     * @param Request $request
-     * @return JsonResponse
-     * @Route("/service/{id}/", name="deleteService", methods="DELETE")
+     * @Route("/service/{id}", name="deleteService", methods="DELETE")
      */
     public function deleteService(Request $request, $id){
         $data = @json_decode($request->getContent(),true);
@@ -338,7 +345,7 @@ class ServiceController extends AbstractController
             } else{
                 $code = -1;
                 $message = "Error";
-                $error = "No access";
+                $error = "No autorizado";
                 $result = null;
             }
             $response = array(
@@ -361,7 +368,7 @@ class ServiceController extends AbstractController
     /**
      * @param $title
      * @return JsonResponse
-     * @Route("/search/services/{title}/", name="searchServices", methods="GET")
+     * @Route("/search/services/{title}", name="searchServices", methods="GET")
      */
      public function searchServices($title){
         try{

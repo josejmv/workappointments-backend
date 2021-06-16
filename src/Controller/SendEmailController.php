@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,51 +25,6 @@ class SendEmailController extends AbstractController
         $this->jwtEncoder = $jwtEncoder;
     }
     
-// START RESTORE EMAIL PROCESS
-
-    /**
-     * @param Request $request
-     * @Route("/mailer/restore-password/", name="restorePassword", methods="POST")
-     */
-    public function restorePassword(Request $request, Mailer $mailer)
-    {
-        $data = @json_decode($request->getContent(),true);
-        if(is_array($data) && array_key_exists("email",$data)){
-            $setting = 'restore_password';
-            $token = $this->jwtEncoder->encode([
-                'email' => $data['email'],
-                'exp' => time() + 3600,
-                'verified'=>true,
-            ]);
-            $confirm = "https://workappointments.vercel.app/login/$token";
-            try {
-                $response = $mailer->sendRestorePasswordEmail($setting, 'josejmvasquez@gmail.com', $confirm);
-                $response = array(
-                    "code" => 1,
-                    "message" => "success",
-                    "error" => null,
-                    "results" => $response
-                );
-            } catch (\Throwable $th) {
-                $response = array(
-                    "code" => 0,
-                    "message" => "error",
-                    "error" => $th->getMessage(),
-                    "results" => null
-                );
-            }
-        } else{
-            $response = array(
-                "code" => 0,
-                "message" => "error",
-                "error" => "Ingrese un email",
-                "results" => null
-            );
-        }
-        return new JsonResponse($response, Response::HTTP_CREATED);
-    }
-
-// END RESTORE EMAIL PROCESS
 // START SERVICE EMAIL PROCESS
 
     /**
@@ -82,20 +38,20 @@ class SendEmailController extends AbstractController
             $filter = @json_decode($service->getFilter(),true);
             $sends = 0;
             $response = null;
-            $interests = [];
+            $allInterested = [];
             if(is_array($filter)){
                 try{
                     foreach($filter as $key => $attribute){
-                        $found = $this->searchServiceOperators($key,$attribute);
-                        if($found != null){
-                            foreach ($found as $interest){
-                                if(!in_array($interest, $interests))
-                                    $interests[] = $interest;
+                        $operators = $this->searchServiceOperators($key,$attribute);
+                        if($operators != null){
+                            foreach ($operators as $operator){
+                                if(!in_array($operator, $allInterested))
+                                    $allInterested[] = $operator;
                             }
                         }
                     }
-                    foreach ($interests as $interest) {
-                        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([ "userInterests" => $interest ]);
+                    foreach ($allInterested as $interested) {
+                        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([ "userInterests" => $interested ]);
                         $operator = $this->getDoctrine()->getRepository(Operator::class)->findOneBy([ "operatorData" => $user ]);
                         if(!$operator instanceof Operator) continue;
                         $resume = new ServiceResume();

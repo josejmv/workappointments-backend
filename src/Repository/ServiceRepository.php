@@ -27,7 +27,7 @@ class ServiceRepository extends ServiceEntityRepository
                  WHERE service.title LIKE :title
                  AND service.active = true"
             )
-            ->setParameter("title","$filter%")
+            ->setParameter("title","%$filter%")
             ->getResult();
         } catch (\Throwable $th) {
             $query = [];

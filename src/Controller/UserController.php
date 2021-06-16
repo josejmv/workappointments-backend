@@ -21,7 +21,7 @@ class UserController extends AbstractController
     /**
      * @param $id
      * @return JsonResponse
-     * @Route("/user/{id}/", name="getUserData", methods="GET")
+     * @Route("/user/{id}", name="getUserData", methods="GET")
      */
     public function getUserData($id){
         try{
@@ -31,6 +31,7 @@ class UserController extends AbstractController
                             return $object->getId();
                 }
             ]),true);
+            unset($userData['password']);
             $response = array(
                 'code'=>1,
                 'message'=>"Success",
@@ -52,7 +53,7 @@ class UserController extends AbstractController
      * @param $page
      * @param $active
      * @return JsonResponse
-     * @Route("/paginator/users/", name="paginatorUsers", methods="GET")
+     * @Route("/paginator/users", name="paginatorUsers", methods="GET")
      */
     public function paginatorUsers(){
         try{
@@ -80,7 +81,7 @@ class UserController extends AbstractController
      * @param $page
      * @param $active
      * @return JsonResponse
-     * @Route("/users/{page}&{active}/", name="getAllUsers", methods="GET")
+     * @Route("/users/{page}&{active}", name="getAllUsers", methods="GET")
      */
     public function getAllUsers($page, $active){
         try{
@@ -93,6 +94,7 @@ class UserController extends AbstractController
                     return $object->getId();
                 }
             ]),true);
+            for ($i=0; $i < count($usersData); $i++) unset($usersData[$i]['password']);
             $response = array(
                 'code'=>1,
                 'message'=>"Success",
@@ -113,7 +115,7 @@ class UserController extends AbstractController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/", name="updateUser", methods="PUT")
+     * @Route("/user", name="updateUser", methods="PUT")
      */
     public function updateUser(Request $request){
         $data = @json_decode($request->getContent(),true);
@@ -213,7 +215,7 @@ class UserController extends AbstractController
      * @param Request $request
      * @param $id
      * @return JsonResponse
-     * @Route("/user/{id}/", name="deleteUser", methods="DELETE")
+     * @Route("/user/{id}", name="deleteUser", methods="DELETE")
      */
     public function deleteUser(Request $request, $id){
         $token = $this->checkToken($request->headers->get('token'));
