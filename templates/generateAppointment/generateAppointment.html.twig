@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<title>Cita de Entrevista</title>
+
+{% block body %}
+<style>
+   td {
+      background-color: #ffffff;
+   }
+</style>
+    
+<div style="margin:0 auto;padding:0px" bgcolor="#ffffff">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+   <tbody>
+      <tr>
+         <td align="center" valign="top" bgcolor="#ffffff" style="padding:10px 0">
+            <table border="0" cellpadding="0" cellspacing="0" width="600" align="center"  style="max-width:600px;width:100%">
+               <tbody>
+                  <tr>
+                     <td align="center" valign="top" style="border:1px solid #dedede">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+                           <tbody>
+                              <tr>
+                                 <td align="center" valign="top">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+                                       <tbody>
+                                          <tr>
+                                             <td align="center" valign="top" style="padding:23px 0">
+                                                <img src="{{ logo }}" height="40" style="height:40px;vertical-align:middle" >
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                   </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                 <td align="center" valign="top" style="padding:30px 25px;border-top:1px solid #e0e0e0">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+                                       <tbody>
+                                          <tr>
+                                             <td align="left" valign="top" style="font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#222222;font-weight:700;font-size:20px;line-height:26px;padding:0 0">
+                                                Hola {{ name }}
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td align="left" valign="top" style="font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#222222;font-weight:700;font-size:20px;line-height:26px;padding:0 0">
+                                                {{ title }}
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td align="left" valign="top" style="font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#222222;font-weight:400;font-size:14px;line-height:22px;padding:20px 0 0">
+                                                {{ description }}
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td>
+                                                <br>
+                                                Sus datos para ingresar son los siguientes:
+                                                <br>
+                                                <span style="font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#222222;font-weight:400;font-size:14px;line-height:22px;padding:20px 0 0" > <strong style="color: #C1007F;">Usuario:</strong>  {{ email }}</span>
+                                                <br>
+                                                <span style="font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#222222;font-weight:400;font-size:14px;line-height:22px;padding:20px 0 0" > <strong style="color: #C1007F;">Clave:</strong> {{ password }}</span>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td align="center" valign="top" bgcolor="#f9f9f9" style="padding:30px 25px 30px;border-top:1px solid #e0e0e0">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+                                       <tbody>
+                                          <tr>
+                                             <td align="left" valign="top" style="font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#222222;font-weight:700;font-size:20px;line-height:26px;padding:0 0">
+                                                Pasos a seguir
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td align="left" valign="top" style="font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#222222;font-weight:400;font-size:14px;line-height:22px;padding:20px 0 0">
+                                                Para aceptar la cita debe hacer lo siguiente:
+                                             </td>
+                                          </tr>
+                                          <tr style="display: flex;flex-direction: column;align-items: center;">
+                                             <td align="center" valign="top" style="display: flex;width: 100%;" width="47%" class="m_4931182139988416081card_layout">
+                                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                                   <tbody>
+                                                      <tr>
+                                                         <td align="left" valign="top" style="border:1px solid #e5e5e5" bgcolor="#ffffff">
+                                                            <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                  </tr>
+                                                                  <tr>
+                                                                     <td align="left" valign="top" style="padding:20px 20px 0;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#212121;font-weight:700;font-size:18px;line-height:26px">
+                                                                        <span style="font-size: 60px;">1</span>   Ingresar al sistema
+                                                                     </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                     <td align="left" valign="top" style="padding:10px 20px 25px;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#757575;font-weight:400;font-size:14px;line-height:22px" class="m_4931182139988416081card1">
+                                                                        Para ingresar al sisteme debe dar click en la parte infrerio en el botón "iNGRESAR".
+                                                                     </td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                         </td>
+                                                   </tr>
+                                                </tbody></table>
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td align="right" valign="top" style="display: flex;width: 100%;" width="47%" class="m_4931182139988416081card_layout m_4931182139988416081padding_top">
+                                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                                   <tbody><tr>
+                                                      <td align="left" valign="top" style="border:1px solid #e5e5e5" bgcolor="#ffffff">
+                                                         <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                                            <tbody><tr>
+                                                            </tr>
+                                                            <tr>
+                                                               <td align="left" valign="top" style="padding:20px 20px 0;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#212121;font-weight:700;font-size:18px;line-height:26px">
+                                                                  <span style="font-size: 60px;">2</span>    Iniciar Sesión
+                                                               </td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td align="left" valign="top" style="padding:10px 20px 25px;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#757575;font-weight:400;font-size:14px;line-height:22px">
+                                                                  Una ves en el sistema, debe ingresar el "usuario" y "clave" para iniciar sesión.
+                                                               </td>
+                                                            </tr>
+                                                         </tbody></table>
+                                                      </td>
+                                                   </tr>
+                                                </tbody></table>
+                                             </td>
+                                          </tr>
+                                          <tr style="display: flex; flex-direction: column;align-items: center;">
+                                             <td align="left" valign="top" style="display: flex;width: 100%;" width="47%" class="m_4931182139988416081card_layout">
+                                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                                   <tbody>
+                                                      <tr>
+                                                         <td align="left" valign="top" style="border:1px solid #e5e5e5" bgcolor="#ffffff">
+                                                            <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                  </tr>
+                                                                  <tr>
+                                                                     <td align="left" valign="top" style="padding:20px 20px 0;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#212121;font-weight:700;font-size:18px;line-height:26px">
+                                                                        <span style="font-size: 60px;">3</span>    Verificar información
+                                                                     </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                     <td align="left" valign="top" style="padding:10px 20px 25px;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#757575;font-weight:400;font-size:14px;line-height:22px" class="m_4931182139988416081card3">
+                                                                        Ya dentro del sistema verificar la información de la cita y estar seguro de poder asistir, ya que los cupos son limitados.
+                                                                     </td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                         </td>
+                                                      </tr>
+                                                   </tbody>
+                                                </table>
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td align="right" valign="top" style="display: flex; width: 100%;" width="47%" class="m_4931182139988416081card_layout m_4931182139988416081padding_top">
+                                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                                   <tbody>
+                                                      <tr>
+                                                         <td align="left" valign="top" style="border:1px solid #e5e5e5" bgcolor="#ffffff">
+                                                            <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                                               <tbody>
+                                                                  <tr>
+                                                                  </tr>
+                                                                  <tr>
+                                                                     <td align="left" valign="top" style="padding:20px 20px 0;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#212121;font-weight:700;font-size:18px;line-height:26px">
+                                                                        <span style="font-size: 60px;">4</span>      Aceptar cita
+                                                                     </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                     <td align="left" valign="top" style="padding:10px 28px 25px 20px;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#757575;font-weight:400;font-size:14px;line-height:22px">
+                                                                        Una vez verificada la información debe aceptar la cita en el sistema para finalizar su confirmación.
+                                                                     </td>
+                                                                  </tr>
+                                                               </tbody>
+                                                            </table>
+                                                         </td>
+                                                      </tr>
+                                                   </tbody>
+                                                </table>
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td valign="top" align="center" style="padding-top:20px">
+                                                <table cellspacing="0" cellpadding="0" border="0">
+                                                   <tbody>
+                                                      <tr>
+                                                         <td style="border-radius:2px;background-color:#1b9ce2;color:#fff!important" align="center" dir="ltr">
+                                                            <a style="padding:10px 40px;display:block;border-radius:3px;color:#fff;text-decoration:none;font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;font-size:14px;background-color: #C1007F;;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);" href="{{ confirm }}" target="_blank">
+                                                               INGRESAR
+                                                            </a>
+                                                         </td>
+                                                      </tr>
+                                                   </tbody>
+                                                </table>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                              <tr>
+                              </tr>
+                              <tr>
+                                 <td align="center" valign="top">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+                                       <tbody>
+                                          <tr>
+                                             <td align="center" valign="top" bgcolor="#ffffff" style="padding:24px 24px">
+                                                <table style="width:100%" cellpadding="0" cellspacing="0">
+                                                   <tbody>
+                                                      <tr>
+                                                         <td align="left" valign="middle">
+                                                            <img src="{{ logo }}" height="24" width="70"  style="display:block" >
+                                                         </td>
+                                                         <td align="right" valign="middle" style="font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;color:#d6dde1;font-weight:400;font-size:12px;line-height:14px;padding:0 0">
+                                                            <a href="https://www.perfexya.com/" style="color:#d6dde1;text-decoration:none">Perfexya Empresa de limpieza en Madrid</a>
+                                                         </td>
+                                                      </tr>
+                                                   </tbody>
+                                                </table>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+{% endblock %}
